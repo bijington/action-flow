@@ -31,7 +31,7 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: create_check_run
         with:
-          route: POST /repos/{owner}/{repo}/issues/$ISSUE_NUMBER/labels
+          route: POST /repos/{owner}/{repo}/issues/${{ github.event.issue.number }}/labels
           owner: bijington
           repo: action-flow
           body: '{"labels":["bug","enhancement"]}'
