@@ -19,10 +19,30 @@ jobs:
       - run: |
           echo blah $ISSUE_NUMBER
         env:
-          ISSUE_NUMBER: ${{ github.event.issue.id }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+
+      - uses: octokit/request-action@v2.x
+        id: create_check_run
+        with:
+          route: POST /repos/{owner}/{repo}/issues/$ISSUE_NUMBER/labels
+          owner: bijington
+          repo: action-flow
+          body: '{"labels":["bug","enhancement"]}'
+          name: "Auto label issue"
+          head_sha: ${{ github.sha }}
+          output: | # The | is significant!
+            title: Test check run title
+            summary: A summary of the test check run
+            images:
+              - alt: Test image
+                image_url: https://octodex.github.com/images/jetpacktocat.png
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
