@@ -34,7 +34,7 @@ jobs:
           route: POST /repos/{owner}/{repo}/issues/${{ github.event.issue.number }}/labels
           owner: bijington
           repo: action-flow
-          body: '{"labels":["bug","enhancement"]}'
+          labels: 'bug'
           name: "Auto label issue"
           head_sha: ${{ github.sha }}
         env:
