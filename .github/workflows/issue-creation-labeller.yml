@@ -2,54 +2,20 @@
 
 name: Issue creation
 
-# Controls when the workflow will run
 on:
   issues:
     types: [opened]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  issue_created:
-    name: Issue created
+  apply-label:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo blah $ISSUE_NUMBER
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
-
-      # - uses: octokit/request-action@v2.x
-      #   id: create_check_run
-      #   with:
-      #     route: POST /repos/{owner}/{repo}/issues/${{ github.event.issue.number }}/labels
-      #     owner: bijington
-      #     repo: action-flow
-      #     labels: 'bug'
-      #     name: "Auto label issue"
-      #     head_sha: ${{ github.sha }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.LABEL_TOKEN }}
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v7
         with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-                const issue = context.payload.issue;
-                const labelToAdd = 'bug';
-                const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-                await octokit.issues.addLabels({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: issue.number,
-                    labels: [labelToAdd]
-                });
-          
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['Triage']
+            })
